@@ -1,4 +1,4 @@
-package com.spring.restdemo.api.demo;
+package com.spring.restdemo.api.domain;
 
 import java.io.Serializable;
 import java.util.HashMap;
