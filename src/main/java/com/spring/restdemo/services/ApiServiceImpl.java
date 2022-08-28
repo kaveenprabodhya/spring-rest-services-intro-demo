@@ -25,8 +25,13 @@ public class ApiServiceImpl implements ApiService {
 
 
     @Override
-    public List<User> getUsers(Integer limit) {
-        User[] userData = restTemplate.getForObject("https://jsonplaceholder.typicode.com/users?_limit="+limit, User[].class);
-        return Arrays.asList(userData);
+    public Flux<User> getUsers(Mono<Integer> limit) {
+        return limit.flatMapMany(integer -> {
+            return WebClient.create(api_url)
+                    .get()
+                    .uri(uriBuilder -> uriBuilder.queryParam("_limit", integer).build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchangeToFlux(clientResponse -> clientResponse.bodyToFlux(User.class));
+        });
     }
 }
